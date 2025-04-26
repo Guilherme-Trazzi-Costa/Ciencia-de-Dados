@@ -49,7 +49,7 @@ executador.get(url_site)
 time.sleep(5) #aguarda 5 segundos para garantir que a pagina carregue
 
 #criar dicionário vazio para armazenar nomes e preços das cadeiras
-dic_produtos = {'Titulo':[], 'Preco':[], 'RAM':[]}
+dic_produtos = {'Titulo':[], 'Preco':[], 'RAM':[],'Processador':[], 'Armazenamento':[], 'Item':[], 'Marca':[], 'Pagamento':[]}
 
 #Vamos iniciar na pagina 1 e ir incrementando em cada troca de pagina
 pagina_atual = 1
@@ -78,14 +78,33 @@ while True:
             nome = produto.find_element(By.CLASS_NAME, 'nameCard').text.strip()
             preco_str = produto.find_element(By.CLASS_NAME, 'priceCard').text.strip()
             preco = float(preco_str.replace("R$", "").replace(".", "").replace(",", ".").strip())
-            ram = re.search(r'(\d+ ?GB RAM)', nome, re.IGNORECASE)
+            ram = re.search(r'(\d{1,2}+ ?GB)', nome, re.IGNORECASE)
+            processador = re.search(r'(Intel (Core i[3579]|Pentium|Celeron)[^\s,]*)|(Core i[3579]-\d{4}U?)|(Ryzen \d \d{4}U?)', nome, re.IGNORECASE)
+            armazenamento = re.search(r'(\d{3,4}+ ?GB SSD)|(SSD \d{3,4}+ ?GB)|(SSD \d{1,2}+ ?TB)|(\d{1,2}+ ?TB SSD)|(\d{3,4}+ ? Emmc)', nome, re.IGNORECASE)
+            item = re.search(r'(Monitor)|(Notebook)|(Computador)|(MacBook)|(iMac)|(Micro PC)', nome, re.IGNORECASE)
+            marca = re.search(r'(3GREEN) | (Husky) | (HP) | (AOC) | (Concórdia) | (Concórdia) |(Acer) | (Aoc) | (Apple) | (ASRock) | (ASUS) | (Benq) | (Bluecase) | (Brazil PC) | (BRAZILPC) | (C3Tech) | (Concordia) | (Cooler Master) | (Corsair) | (Dell) | (Fácil Computadores) | (Gigabyte) | (Hp Inc) | (HQ) | (Husky Gaming) | (Husky Office) | (HYRAX) | (KaBuM! Tech) | (KBM! Gaming) | (Lenovo) | (LG) | (MSI) | (NTC) | (Outros) | (PCFort) | (PCYES) | (Philco) | (Philips) | (Positivo) | (Rise Mode) | (Samsung) | (Tronos) | (VAIO) | (Zowie)', nome, re.IGNORECASE)
+            pagamento = produto.find_element(By.CLASS_NAME, 'priceTextCard').text.strip()
             
+            # Para extrair apenas o texto correspondente:
+            ram = ram.group(0).upper() if ram else ''
+            processador = processador.group(0).upper() if processador else ''
+            armazenamento = armazenamento.group(0).upper() if armazenamento else ''
+            item = item.group(0) if item else ''
+            marca = marca.group(0).upper() if marca else ''
+
+
             if preco >= 0:
                 print(f'{nome} - {preco}')
 
                 dic_produtos['Titulo'].append(nome)
                 dic_produtos['Preco'].append(preco)
                 dic_produtos['RAM'].append(ram)
+                dic_produtos['Processador'].append(processador)
+                dic_produtos['Armazenamento'].append(armazenamento)
+                dic_produtos['Item'].append(item)
+                dic_produtos['Marca'].append(marca)
+                dic_produtos['Pagamento'].append(pagamento)
+
 
         except Exception:
             print('Erro ao coletar dados:', Exception)
@@ -123,17 +142,11 @@ df = pd.DataFrame(dic_produtos)
 df.to_excel("Computadores.xlsx", index = False)
 #Salvar dados em csv a partir do dataframe
 
-# df = pd.read_excel("Computadores.xlsx")
-
-# for item in df['Titulo']:
-#     if 'Monitor' in df['Titulo']:
-#         df['Produto'] = 'Monitor'
-#     elif 'Notebook' in df['Titulo']:
-#         df['Produto'] = 'Notebook'
-#     elif 'Computador' in df['Titulo']:
-#         df['Produto'] = 'Computador'
 
 print(f'Arquivo salvo com sucesso! ({len(df)} produtos armazenados)')
+
+
+
 
 
 

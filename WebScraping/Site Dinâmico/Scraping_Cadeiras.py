@@ -48,7 +48,7 @@ executador.get(url_site)
 time.sleep(5) #aguarda 5 segundos para garantir que a pagina carregue
 
 #criar dicionário vazio para armazenar nomes e preços das cadeiras
-dic_produtos = {'Titulo':[], 'Preco':[]}
+dic_produtos = {'Titulo':[], 'Preco':[], 'Promocao':[]}
 
 #Vamos iniciar na pagina 1 e ir incrementando em cada troca de pagina
 pagina_atual = 1
@@ -76,6 +76,7 @@ while True:
         try:
             nome = produto.find_element(By.CLASS_NAME, 'nameCard').text.strip()
             preco = produto.find_element(By.CLASS_NAME, 'priceCard').text.strip()
+            promocao = produto.find_element(By.CLASS_NAME, 'offerProductFooter').text.strip()
 
             print(f'{nome} - {preco}')
 
@@ -116,7 +117,7 @@ executador.quit()
 df = pd.DataFrame(dic_produtos)
 
 #Salvar dados em csv a partir do dataframe
-df.to_excel("Cadeiras.xlsx", index = False)
+df.to_excel("Cadeiras2.xlsx", index = False)
 
 print(f'Arquivo salvo com sucesso! ({len(df)} produtos armazenados)')
 
