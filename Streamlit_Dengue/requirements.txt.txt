@@ -1,5 +1,0 @@
-streamlit
-pandas
-plotly
-streamlit-option-menu
-numpy
