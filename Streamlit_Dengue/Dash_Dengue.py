@@ -13,7 +13,7 @@ import numpy as np
 st.set_page_config(page_title="Dashboard de Dengue", layout='wide')
 
 # Leitura da base
-df_base = pd.read_excel("Base_Final.xlsx")
+df_base = pd.read_excel("Streamlit_Dengue\Base_Final.xlsx")
 
 # Título
 st.title("🦟 🗑 Relação entre os casos de dengue e o acúmulo de lixo nos municípios de São Paulo")
