@@ -1,291 +1,244 @@
 # python -m streamlit run dashboard.py
 
+# Comando para rodar o arquivo: python -m streamlit run dashboard.py
+
+# Imports
 import streamlit as st
 import pandas as pd
 import plotly.express as px
 from streamlit_option_menu import option_menu
 
+# Configuração da página
 st.set_page_config(page_title='Dashboard Emissão de Carbono - Transportes!', page_icon='🚚', layout='wide')
 
-df = pd.read_excel('base_transportes.xlsx')
+def formatar_compacto(valor):
+    if valor >= 1_000_000_000:
+        return f'{valor / 1_000_000_000:.2f}B'
+    elif valor >= 1_000_000:
+        return f'{valor / 1_000_000:.2f}M'
+    elif valor >= 1_000:
+        return f'{valor / 1_000:.2f}K'
+    else:
+        return f'{valor:.2f}'
 
+
+# Leitura das bases de dados
+df_transportes = pd.read_excel('base_transportes.xlsx')
 df_unificado = pd.read_excel('base_transportes_leve.xlsx')
-#Filtros
 
+# Filtros disponíveis na barra lateral
 st.sidebar.header('Selecione os filtros')
 
-#Filtro por Meio de Transporte
-meio_transporte = st.sidebar.multiselect(
-#Opções filtro
+# Filtro por Meio de Transporte
+filtro_meio_transporte = st.sidebar.multiselect(
     "Meio de Transporte", 
-    options = df['Meio de Transporte'].unique(),
-#Opção que vem por padrão no filtro
-    default = df['Meio de Transporte'].unique(),
-#Chave única
-    key="meio_transporte"
+    options = df_transportes['Meio de Transporte'].unique(),
+    default = df_transportes['Meio de Transporte'].unique(),
+    key="filtro_meio_transporte"
 )
 
-#Filtro por combustivel
-combustivel = st.sidebar.multiselect(
-#Opções filtro
-    "Combustivel", 
-    options = df['Combustivel'].unique(),
-#Opção que vem por padrão no filtro
-    default = df['Combustivel'].unique(),
-#Chave única
-    key="combustivel"
+# Filtro por Combustível
+filtro_combustivel = st.sidebar.multiselect(
+    "Combustível", 
+    options = df_transportes['Combustivel'].unique(),
+    default = df_transportes['Combustivel'].unique(),
+    key="filtro_combustivel"
 )
 
-#Filtro por Tipo de Transporte
-tipo_transporte = st.sidebar.multiselect(
-#Opções filtro
+# Filtro por Tipo de Transporte
+filtro_tipo_transporte = st.sidebar.multiselect(
     "Tipo de Transporte", 
-    options = df['Tipo de Transporte'].unique(),
-#Opção que vem por padrão no filtro
-    default = df['Tipo de Transporte'].unique(),
-#Chave única
-    key="tipo_transporte"
+    options = df_transportes['Tipo de Transporte'].unique(),
+    default = df_transportes['Tipo de Transporte'].unique(),
+    key="filtro_tipo_transporte"
 )
 
-#Filtro por Atividade
-atividade = st.sidebar.multiselect(
-#Opções filtro
+# Filtro por Atividade
+filtro_atividade = st.sidebar.multiselect(
     "Atividade", 
-    options = df['Atividade'].unique(),
-#Opção que vem por padrão no filtro
-    default = df['Atividade'].unique(),
-#Chave única
-    key="atividade"
+    options = df_transportes['Atividade'].unique(),
+    default = df_transportes['Atividade'].unique(),
+    key="filtro_atividade"
 )
 
-#Filtro por Estado
-estado = st.sidebar.multiselect(
-#Opções filtro
+# Filtro por Estado
+filtro_estado = st.sidebar.multiselect(
     "Estado", 
-    options = df['Estado'].unique(),
-#Opção que vem por padrão no filtro
-    default = df['Estado'].unique(),
-#Chave única
-    key="estado"
+    options = df_transportes['Estado'].unique(),
+    default = df_transportes['Estado'].unique(),
+    key="filtro_estado"
 )
 
-
-# Menu
-
-with st.sidebar:
-        selecionado = option_menu(
-            menu_title='Menu',
-            options=['Gráficos'],
-            default_index=0
-        )
-
-df_filtrado = df.query(
-    "`Meio de Transporte` in @meio_transporte and Combustivel in @combustivel and `Tipo de Transporte` in @tipo_transporte and Atividade in @atividade and Estado in @estado"
+# Filtrando os dados com base nos filtros selecionados
+df_filtrado = df_transportes.query(
+    "`Meio de Transporte` in @filtro_meio_transporte and Combustivel in @filtro_combustivel and `Tipo de Transporte` in @filtro_tipo_transporte and Atividade in @filtro_atividade and Estado in @filtro_estado"
 )
-# Metricas
 
-def graficos():
+# Função para gerar os gráficos e métricas
+def gerar_graficos():
+    # Título da análise
+    st.title('🚢 Análise Comparativa das Emissões de GEE nos Transportes de Carga Rodoviário, Ferroviário e Aquaviário no Brasil')
 
-    st.title('🚢 Análise Comparativa das Emissões de GEE nos Transporte de Carga Rodoviário, Ferroviário e Aquaviário no Brasil')
-    colunas_anos = [2020, 2021, 2022, 2023] 
+    # Definição das colunas de anos e fator de crédito de carbono
+    colunas_anos = [2020, 2021, 2022, 2023]
+    fator_credito_carbono = 0.05
 
-    fator_crédito = 0.05
-
-    df_filtrado['Total'] = df_filtrado[colunas_anos].sum(axis=1)
-
-    df_filtrado["Crédito de Carbono"] = df_filtrado['Total']*fator_crédito
-
-    porcentagem_créditos = fator_crédito*100
+    # Cálculo do total de emissões e créditos de carbono
+    df_filtrado['Total Emissao'] = df_filtrado[colunas_anos].sum(axis=1)
+    df_filtrado["Credito de Carbono"] = df_filtrado['Total Emissao'] * fator_credito_carbono
+    porcentagem_credito = fator_credito_carbono * 100
     
-    total_emissao = df_filtrado['Total'].sum()
-    media_emissao = df_filtrado['Total'].mean()
-    total_credito = df_filtrado['Crédito de Carbono'].sum()
+    total_emissao = df_filtrado['Total Emissao'].sum()
+    media_emissao = df_filtrado['Total Emissao'].mean()
+    total_credito = df_filtrado['Credito de Carbono'].sum()
 
-    metrica1, metrica2, metrica3, metrica4 = st.columns(4)
+    # Exibindo as métricas
+    metrica1, metrica2= st.columns(2)
     with metrica1:
-         st.metric('Total de Emissão de Crabono', value=f'{total_emissao:.2f}')
+        st.metric('Total de Emissão de Carbono (em Toneladas)', value=formatar_compacto(total_emissao))
     with metrica2:
-         st.metric('Média de Emissão de carbono', value=f'{media_emissao:.2f}')
+        st.metric('Média de Emissão de Carbono (em Toneladas)', value=formatar_compacto(media_emissao))
+    
+    metrica3, metrica4 = st.columns(2)
     with metrica3:
-         st.metric('Total de Crédito de Crabono', value=f'{total_credito:.2f}')
+        st.metric('Total de Crédito de Carbono (em Toneladas)', value=formatar_compacto(total_credito))
     with metrica4:
-         st.metric('Porcentagem de Crédito de Crabono', value=f'{porcentagem_créditos:.2f}%')
-    
+        st.metric('Porcentagem de Crédito de Carbono', value=f'{int(porcentagem_credito)}%')
 
-#Gráficos
-
-    # graf1
-    # st.title('Comparação das Emissões de GEE nos Transporte de Carga Rodoviário, Ferroviário e Aquaviário no Brasil')
-    # #df_gas = df_filtrado[df_filtrado['Meio de Transporte'].isin(['Hidroviário', 'Ferroviário', 'Rodoviário'])]
-    # ordem_modais = ['Hidroviário', 'Ferroviário', 'Rodoviário']
-    # df_filtrado['Meio de Transporte'] = pd.Categorical(df_filtrado['Meio de Transporte'], categories=ordem_modais, ordered=True)
-
-    # # Somar emissões por gás para todos os modais
-    # total_por_gas = df_filtrado.groupby('Gás')[colunas_anos].sum()
-    # # Selecionar os 9 maiores gases
-    # gases_maiores = total_por_gas.nlargest(9,total_por_gas)
-    # df_filtrado = df_filtrado[df_filtrado['Gás'].isin(gases_maiores)]
-
-    # # Agrupar dados por gás e modal
-    # df_agrupado = (
-    #     df_filtrado.groupby(['Gás', 'Meio de Transporte'])[colunas_anos]
-    #     .sum()
-    #     .reset_index()
-    # )
-
-    # df_agrupado['Gás'] = pd.Categorical(df_agrupado['Gás'], categories=gases_maiores, ordered=True)
-    # fig = px.bar(
-    #     df_agrupado,
-    #     x='Gás',
-    #     y='2023',
-    #     color='Meio de Transporte',
-    #     barmode='group',
-    #     category_orders={'Meio de Transporte': ordem_modais, 'Gás': gases_maiores},
-    #     labels={
-    #         '2023': 'Emissões (t)',
-    #         'Meio de Transporte': 'Modal de Transporte',
-    #         'Gás': 'Tipo de Gás'
-    #     },
-    # )
-
-    # fig.update_traces(texttemplate='%{y:.4s}', textposition='outside')
-    # fig.update_layout(
-    #     uniformtext_minsize=8,
-    #     uniformtext_mode='hide',
-    #     xaxis_tickangle=-45,
-    #     yaxis_title='Emissões (t)',
-    #     legend_title_text='Modal de Transporte',
-    #     margin=dict(t=80, b=150),
-    #     height=600,
-    # )
-
-    # st.plotly_chart(fig, use_container_width=True)
-
-    emissao_gas_group = df_filtrado.groupby(['Gás', 'Meio de Transporte'], as_index=False)[colunas_anos].sum()
-    emissao_gas_group['Total'] = emissao_gas_group[colunas_anos].sum(axis=1)
-
-    top_10_gas = emissao_gas_group.nlargest(10, 'Total')
-
-        # Criando o gráfico de barras
-    emissao_gas_10 = px.bar(
-            top_10_gas,
-            x="Gás",
-            y='Total',
-            color="Meio de Transporte",
-            barmode="group",
-            title="Top 5 Estados com mais emissão de 2020 à 2023"
-        )
-    emissao_gas_10.update_traces(texttemplate='%{y:.4s}', textposition='outside')
-    emissao_gas_10.update_layout(
-        uniformtext_minsize=8,
-        uniformtext_mode='hide',
-        xaxis_tickangle=-45,
-        yaxis_title='Emissões (t)',
-        legend_title_text='Modal de Transporte',
-        margin=dict(t=80, b=150),
-        height=600,
-    )
-    emissao_gas_10.update_traces(textposition='outside')
-    emissao_gas_10.update_layout(height=550)
-
-
-    #graf2
-    
-
-    df_co2 = df_unificado [df_unificado ['Gás'] == 'CO2e (t) GWP-AR6']
-
+    # Gráfico 1 - Emissões de CO2e por ano e meio de transporte
+    df_co2 = df_unificado[df_unificado['Gás'] == 'CO2e (t) GWP-AR6']
     emissao_total_ano = px.line(
         df_co2.groupby(['Ano', 'Meio de Transporte'])['Emissão Total'].sum().reset_index(),
         x='Ano',
         y='Emissão Total',
         color='Meio de Transporte',
-        title='Emissão Total por Ano',
-        labels = {
-            'Emissão Total': 'CO2e (t) GWP-AR6'
-        }
+        title='Emissões Anuais de CO2e(t) GWP-AR6 de 2000 a 2023',
+        labels = {'Emissão Total': 'CO2e (t) GWP-AR6'}
+    )
+    emissao_total_ano.update_layout(
+        title_font=dict(size=18),
+        xaxis_title_font=dict(size=16),
+        yaxis_title_font=dict(size=16),
+        legend_title_font=dict(size=16),
+        legend_font=dict(size=16),
+        font=dict(size=16),
+        xaxis=dict(tickfont=dict(size=22)),
+        yaxis=dict(tickfont=dict(size=22))
     )
 
+    # Gráfico 2 - Emissões de GEE por gás e meio de transporte
+    emissao_gas_group = df_filtrado.groupby(['Gás', 'Meio de Transporte'], as_index=False)[colunas_anos].sum()
+    emissao_gas_group['Total Emissao'] = emissao_gas_group[colunas_anos].sum(axis=1)
+    top_10_gas = emissao_gas_group.nlargest(10, 'Total Emissao')
 
-    #graf3
-#graf2 - Emissao por tipo de combustivel
-    df_ = df.groupby(['Combustivel']).size().reset_index(name='Quantidade')
-    
-    df_['Quantidade'] = pd.to_numeric(df_['Quantidade'], errors='coerce').astype('Int64')
+    emissao_gas_10 = px.bar(
+        top_10_gas,
+        x="Gás",
+        y='Total Emissao',
+        color="Meio de Transporte",
+        barmode="group",
+        height=550,
+        title="Emissões de Gases pelos Modais de Transporte de 2000 a 2023"
+    )
+    emissao_gas_10.update_layout(
+        title_font=dict(size=18),
+        xaxis_title_font=dict(size=16),
+        yaxis_title_font=dict(size=16),
+        legend_title_font=dict(size=16),
+        legend_font=dict(size=16),
+        font=dict(size=16),
+        xaxis=dict(tickfont=dict(size=22)),
+        yaxis=dict(tickfont=dict(size=22))
+    )
 
-    df_.loc[df_['Quantidade'] < 300, 'Combustivel'] = 'Outros'
+    # Gráfico 3 - Emissão por tipo de combustível
+    df_combustivel = df_transportes.groupby(['Combustivel']).size().reset_index(name='Quantidade')
+    df_combustivel['Quantidade'] = pd.to_numeric(df_combustivel['Quantidade'], errors='coerce').astype('Int64')
+    df_combustivel.loc[df_combustivel['Quantidade'] < 300, 'Combustivel'] = 'Outros'
 
-    # Gráfico de rosquinha
-    graf_comb = px.pie(
-        df_,
+    graf_combustivel = px.pie(
+        df_combustivel,
         names="Combustivel",
         values="Quantidade",
-        title="Quantidade utilizada de cada Combustível nos anos de 2000 a 2023",
+        title="Quantidade utilizada de cada Combustível de 2000 a 2023",
         color="Combustivel",
-        labels={
-            "Quantidade": "Total de ocorrências",
-            "Produto ou sistema": "Combustível"
-        },
+        labels={"Quantidade": "Total de Ocorrências", "Produto ou sistema": "Combustível"},
         hole=0.5
     )
+    graf_combustivel.update_traces(textinfo='percent', textfont_size=20)
+    graf_combustivel.update_layout(
+        title_font=dict(size=18),
+        font=dict(size=16),
+        height=550,
+        legend_title_font=dict(size=16),
+        legend_font=dict(size=16),
+    )
 
-    graf_comb.update_traces(textinfo='percent', textfont_size=20)
-    graf_comb.update_layout(height=550)
-
-
-    #graf4
-#Gráfico 4 - Emissão por estado de 2020 à 2023
-    
+    # Gráfico 4 - Emissão por estado de 2020 a 2023
     emissao_estado_group = df_filtrado.groupby("Estado", as_index=False)[colunas_anos].sum()
-    emissao_estado_group['Total'] = emissao_estado_group[colunas_anos].sum(axis=1)
+    emissao_estado_group['Total Emissao'] = emissao_estado_group[colunas_anos].sum(axis=1)
+    top_5_estados = emissao_estado_group.nlargest(5, 'Total Emissao')
 
-    top_5_estados = emissao_estado_group.nlargest(5, 'Total')
-
-        # Criando o gráfico de barras
     emissao_estado_5 = px.bar(
-            top_5_estados,
-            x="Estado",
-            y='Total',
-            color="Estado",
-            barmode="group",
-            title="Top 5 Estados com mais emissão de 2020 à 2023"
-        )
-    emissao_estado_5.update_traces(textposition='outside')
-    emissao_estado_5.update_layout(height=550)
-    #graf5
-    df_agrupado = df_filtrado [df_filtrado ['Gás'] == 'CO2e (t) GWP-AR6']
-    df_agrupado = df.groupby('Meio de Transporte', as_index=False)[[2020, 2021, 2022, 2023]].sum()
+        top_5_estados,
+        x="Estado",
+        y='Total Emissao',
+        color="Estado",
+        barmode="group",
+        height=600,
+        title="Estados com mais Emissões de Carbono de 2020 a 2023"
+    )
+    emissao_estado_5.update_layout(
+        title_font=dict(size=18),
+        xaxis_title_font=dict(size=16),
+        yaxis_title_font=dict(size=16),
+        legend_title_font=dict(size=16),
+        legend_font=dict(size=16),
+        font=dict(size=16),
+        xaxis=dict(tickfont=dict(size=22)),
+        yaxis=dict(tickfont=dict(size=22))
+    )
+
+    # Gráfico 5 - Comparação das emissões por meio de transporte ao longo dos anos
+    df_agrupado = df_filtrado[df_filtrado['Gás'] == 'CO2e (t) GWP-AR6']
+    df_agrupado = df_transportes.groupby('Meio de Transporte', as_index=False)[[2020, 2021, 2022, 2023]].sum()
     df_agrupado.columns = df_agrupado.columns.astype(str)
 
-    df_long = df_agrupado.melt(id_vars='Meio de Transporte', 
-                            var_name='Ano', 
-                            value_name='Total de emissões')
+    df_long = df_agrupado.melt(id_vars='Meio de Transporte', var_name='Ano', value_name='Total Emissao')
 
-    comparacao_transportes = px.bar(df_long, 
+    comparacao_transportes = px.bar(
+        df_long, 
                 x='Ano', 
-                y='Total de emissões', 
+                y='Total Emissao', 
                 color='Meio de Transporte', 
                 barmode='group',
                 height=600,
-                title='Emissões por Ano e Modal de Transporte')
-    
+                title='Emissões Anuais de cada Modal de Transporte de 2020 a 2023')
+    comparacao_transportes.update_layout(
+        title_font=dict(size=18),
+        xaxis_title_font=dict(size=16),
+        yaxis_title_font=dict(size=16),
+        legend_title_font=dict(size=16),
+        legend_font=dict(size=16),
+        font=dict(size=16),
+        xaxis=dict(tickfont=dict(size=22)),
+        yaxis=dict(tickfont=dict(size=22))
+    )
+
+    # Exibindo os gráficos
     st.plotly_chart(emissao_total_ano, use_container_width=True)
 
     grafic1, grafic2 = st.columns(2)
     with grafic1:
         st.plotly_chart(emissao_gas_10, use_container_width=True)
     with grafic2:
-        st.plotly_chart(graf_comb, use_container_width=True)
-    
+        st.plotly_chart(graf_combustivel, use_container_width=True)
+
     graf1, graf2 = st.columns(2)
     with graf1:
         st.plotly_chart(emissao_estado_5, use_container_width=True)
     with graf2:
         st.plotly_chart(comparacao_transportes, use_container_width=True)
-    
-        
 
-def side_bar():
-    if selecionado == 'Gráficos':
-        graficos()
-
-side_bar()
+# Chamando a função para gerar os gráficos
+gerar_graficos()
