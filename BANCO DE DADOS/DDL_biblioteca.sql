@@ -24,7 +24,7 @@ FOREIGN KEY(id_autorL) REFERENCES tb_autores(id_autor)
 SELECT * FROM tb_livros;
 
 CREATE TABLE tb_membros(
-id_membro INT(10) NOT NULL UNIQUE,
+id_membro INT(10) NOT null,
 nome VARCHAR(255),
 data_adesao DATE,
 PRIMARY KEY(id_membro)

@@ -35,14 +35,14 @@ SELECT * FROM tb_proprietario;
 
 
 CREATE TABLE tb_historico (
-id_historico INT(10) NOT NULL,
+id_historico INT(10),
 data_modificacao DATE,
-id_carro INT(10) NOT NULL,
+id_carroH INT(10) NOT NULL,
 valor_anterior DECIMAL(10,2),
 valor_novo DECIMAL(10,2),
 PRIMARY KEY (id_historico),
-FOREIGN KEY (id_carro) REFERENCES tb_carro(id_carro)
-)
+FOREIGN KEY (id_carroH) REFERENCES tb_carro(id_carro)
+);
 
 /*Exclui tabela*/
 /*DROP TABLE tb_historico;*/

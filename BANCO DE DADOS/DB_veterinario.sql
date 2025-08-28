@@ -10,7 +10,7 @@ nome VARCHAR(255),
 especialidade VARCHAR(255),
 telefone VARCHAR(25),
 PRIMARY KEY(id_veterinario)
-)
+);
 
 CREATE TABLE tb_clientes (
 id_cliente INT(10) NOT NULL UNIQUE,
@@ -34,7 +34,7 @@ FOREIGN KEY(id_clienteP) REFERENCES tb_clientes(id_cliente)
 CREATE TABLE tb_atendimentos (
 id_atendimento INT(10) NOT NULL UNIQUE,
 id_petA INT(10) NOT NULL UNIQUE,
-id_veterinarioA INT(10) NOT NULL UNIQUE,
+id_veterinarioA INT(10) NOT NULL,
 data_atendimento DATE,
 descricao VARCHAR(255),
 PRIMARY KEY(id_atendimento),
@@ -87,6 +87,7 @@ INSERT INTO tb_clientes (id_cliente, nome, endereco, telefone) VALUES(
 '4231-1324'
 );
 
+
 SELECT * FROM tb_pets;
 INSERT INTO tb_pets (id_pet, nome, tipo, raca, data_nascimento, id_clienteP) VALUES(
 '1',
@@ -115,6 +116,16 @@ INSERT INTO tb_pets (id_pet, nome, tipo, raca, data_nascimento, id_clienteP) VAL
 '3'
 );
 
+INSERT INTO tb_pets (id_pet, nome, tipo, raca, data_nascimento, id_clienteP) VALUES(
+'4',
+'Baro',
+'Passaro',
+'Calopsita',
+'2021-06-16',
+'3'
+);
+
+
 SELECT * FROM tb_atendimentos;
 INSERT INTO tb_atendimentos (id_atendimento, id_petA, id_veterinarioA, data_atendimento, descricao) VALUES(
 '1',
@@ -138,6 +149,14 @@ INSERT INTO tb_atendimentos (id_atendimento, id_petA, id_veterinarioA, data_aten
 '2',
 '2025-02-25',
 'Passaro não está se alimentando e fica encolhido no canto da gaiola, possível resfriado'
+);
+
+INSERT INTO tb_atendimentos (id_atendimento, id_petA, id_veterinarioA, data_atendimento, descricao) VALUES(
+'4',
+'4',
+'3',
+'2025-02-27',
+'Passaro está com secreções nos olhos, possível resfriado'
 );
 
 -- EXERCICIO 4. Realize ao menos 5 alterações (UPDATES)

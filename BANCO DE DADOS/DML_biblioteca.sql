@@ -146,7 +146,13 @@ INSERT INTO tb_emprestimos(id_emprestimo, id_membroE, id_livroE, data_emprestimo
 '2025-02-03'
 );
 
-
+INSERT INTO tb_emprestimos(id_emprestimo, id_membroE, id_livroE, data_emprestimo, data_devolucao) VALUES(
+'6',
+'4',
+'1',
+'2025-06-27',
+'2025-07-10'
+);
 SELECT * FROM tb_autores;
 UPDATE tb_autores SET data_nascimento = '1965-06-06' WHERE id_autor = 3;
 
@@ -162,3 +168,5 @@ UPDATE tb_membros SET data_adesao = '2025-01-17' WHERE id_membro = '5';
 SELECT * FROM tb_membros WHERE id_membro = '4';
 UPDATE tb_membros SET nome = 'Diogo' WHERE id_membro = '4';
 
+SELECT * FROM tb_emprestimos WHERE id_membroE = '1';
+UPDATE tb_emprestimos SET data_devolucao = '2025-05-30' WHERE id_membroE = '1';
