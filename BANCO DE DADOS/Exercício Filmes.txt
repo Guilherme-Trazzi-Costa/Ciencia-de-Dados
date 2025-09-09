@@ -1,0 +1,528 @@
+Exercício Filmes
+databases> use Favoritos
+switched to db Favoritos
+Favoritos> db.createCollection("filmes")
+{ ok: 1 }
+Favoritos> {
+... titulo: "Inception",
+... ano: 2010,
+... genero: ["Ação", "Ficção Científica"],
+... atores: [
+... { nome: "Leonardo DiCaprio", personagem: "Cobb" },
+... { nome: "Joseph Gordon-Levitt", personagem: "Arthur" }
+... ],
+... avaliacao: 8.8,
+... disponivelStreaming: true
+... }
+...
+... {
+Uncaught:
+SyntaxError: Missing semicolon. (3:3)
+
+  1 | {
+  2 | titulo: "Inception",
+> 3 | ano: 2010,
+    |    ^
+  4 | genero: ["Ação", "Ficção Científica"],
+  5 | atores: [
+  6 | { nome: "Leonardo DiCaprio", personagem: "Cobb" },
+
+Favoritos> {
+... titulo: "Superman(2025)",
+... ano: 2025
+... genero: ["Ação", "Aventura", "Super-Herói"],
+Uncaught:
+SyntaxError: Missing semicolon. (3:3)
+
+  1 | {
+  2 | titulo: "Superman(2025)",
+> 3 | ano: 2025
+    |    ^
+  4 | genero: ["Ação", "Aventura", "Super-Herói"],
+  5 |
+
+Favoritos> {
+...     titulo: "Superman(2025)",
+...     ano: 2025
+...     genero: ["Ação", "Aventura", "Super-Herói"],
+...     atores: [
+...     { nome: "David Corenswet", personagem: "Superman"},
+...     {nome: "Rachel Brosnahan", personagem: "Louis Lane"}],
+...     avaliação: 7.3
+... }
+Uncaught:
+SyntaxError: Missing semicolon. (3:4)
+
+  1 | {
+  2 |   titulo: "Superman(2025)",
+> 3 |   ano: 2025
+    |      ^
+  4 |   genero: ["Ação", "Aventura", "Super-Herói"],
+  5 |   atores: [
+  6 |   { nome: "David Corenswet", personagem: "Superman"},
+
+Favoritos> {
+...     titulo: "Superman(2025)",
+...     ano: 2025
+...     genero: ["Ação", "Aventura", "Super-Herói"],
+...     atores: [
+...     { nome: "David Corenswet", personagem: "Superman"},
+...     {nome: "Rachel Brosnahan", personagem: "Louis Lane"}],
+...     avaliação: 7.3
+... }
+Uncaught:
+SyntaxError: Missing semicolon. (3:4)
+
+  1 | {
+  2 |   titulo: "Superman(2025)",
+> 3 |   ano: 2025
+    |      ^
+  4 |   genero: ["Ação", "Aventura", "Super-Herói"],
+  5 |   atores: [
+  6 |   { nome: "David Corenswet", personagem: "Superman"},
+
+Favoritos> {
+...     titulo: "Superman(2025)",
+...     ano: 2025,
+...     genero: ["Ação", "Aventura", "Super-Herói"],
+...     atores: [
+...     { nome: "David Corenswet", personagem: "Superman"},
+...     {nome: "Rachel Brosnahan", personagem: "Louis Lane"}],
+...     avaliação: 7.3
+... }
+... use Favoritos
+Uncaught:
+SyntaxError: Missing semicolon. (3:4)
+
+  1 | {
+  2 |   titulo: "Superman(2025)",
+> 3 |   ano: 2025,
+    |      ^
+  4 |   genero: ["Ação", "Aventura", "Super-Herói"],
+  5 |   atores: [
+  6 |   { nome: "David Corenswet", personagem: "Superman"},
+
+Favoritos> db.filmes.InsertOne({
+...     titulo: "Superman(2025)",
+...     ano: 2025,
+...     genero: ["Ação", "Aventura", "Super-Herói"],
+...     atores: [
+...     { nome: "David Corenswet", personagem: "Superman"},
+...     {nome: "Rachel Brosnahan", personagem: "Louis Lane"}],
+...     avaliação: 7.3
+... })
+TypeError: db.filmes.InsertOne is not a function
+Favoritos> show collections
+filmes
+Favoritos> db.filmes.InsertOne({
+...     titulo: "Superman(2025)",
+...     ano: 2025,
+...     genero: ["Ação", "Aventura", "Super-Herói"],
+...     atores: [
+...     { nome: "David Corenswet", personagem: "Superman"},
+...     {nome: "Rachel Brosnahan", personagem: "Louis Lane"}],
+...     avaliação: 7.3
+... })
+TypeError: db.filmes.InsertOne is not a function
+Favoritos> {
+...     titulo: "Superman(2025)",
+...     ano: 2025,
+...     genero: ["Ação", "Aventura", "Super-Herói"],
+...     atores: [
+...     { nome: "David Corenswet", personagem: "Superman"},
+...     {nome: "Rachel Brosnahan", personagem: "Louis Lane"}],
+...     avaliação: 7.3
+... }
+...
+... use Favoritos
+Uncaught:
+SyntaxError: Missing semicolon. (3:4)
+
+  1 | {
+  2 |   titulo: "Superman(2025)",
+> 3 |   ano: 2025,
+    |      ^
+  4 |   genero: ["Ação", "Aventura", "Super-Herói"],
+  5 |   atores: [
+  6 |   { nome: "David Corenswet", personagem: "Superman"},
+
+Favoritos> db.filmes.insertMany(
+... [
+... {
+... titulo: "Inception",
+... ano: 2010,
+... genero: ["Ação", "Ficção Científica"],
+... atores: [
+... { nome: "Leonardo DiCaprio", personagem: "Cobb" },
+... { nome: "Joseph Gordon-Levitt", personagem: "Arthur" }
+... ],
+... avaliacao: 8.8,
+... disponivelStreaming: true
+... },
+...
+... {
+...     titulo: "Superman(2025)",
+...     ano: 2025,
+...     genero: ["Ação", "Aventura", "Super-Herói"],
+...     atores: [
+...     { nome: "David Corenswet", personagem: "Superman"},
+...     {nome: "Rachel Brosnahan", personagem: "Louis Lane"}],
+...     avaliação: 7.3
+... },
+...
+... {
+...     titulo: "F1: O Filme",
+...     ano: 2025,
+...     genero: ["Ação", "Ação de Carro", "Motorsport", "Drama"],
+...     atores: [
+...     { nome: "Brad Pitt", personagem: "Sonny Hayes"},
+...     {nome: "Damson Idris", personagem: "Joshua Pearce"}],
+...     avaliação: 7.8
+... },
+...
+... {
+...     titulo: "Eu sei o que Vocês Fizeram no Verão Passado",
+...     ano: 2025,
+...     genero: ["Terror Slasher", "Horror"],
+...     atores: [
+...     { nome: "Madelyn Cline", personagem: "Danica Richards"},
+...     {nome: "Chase Sui Wonders", personagem: "Ava Brucks"}],
+...     avaliação: 7.8
+... }
+... ])
+{
+  acknowledged: true,
+  insertedIds: {
+    '0': ObjectId('68b8c321f1aed29b60735189'),
+    '1': ObjectId('68b8c321f1aed29b6073518a'),
+    '2': ObjectId('68b8c321f1aed29b6073518b'),
+    '3': ObjectId('68b8c321f1aed29b6073518c')
+  }
+}
+Favoritos> db.filmes.find(avaliacao: {$gt: 8})
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:24)
+
+> 1 | db.filmes.find(avaliacao: {$gt: 8})
+    |                         ^
+  2 |
+
+Favoritos> db.filmes.find({avaliacao: {$gt: 8}})
+[
+  {
+    _id: ObjectId('68b8c321f1aed29b60735189'),
+    titulo: 'Inception',
+    ano: 2010,
+    genero: [ 'Ação', 'Ficção Científica' ],
+    atores: [
+      { nome: 'Leonardo DiCaprio', personagem: 'Cobb' },
+      { nome: 'Joseph Gordon-Levitt', personagem: 'Arthur' }
+    ],
+    avaliacao: 8.8,
+    disponivelStreaming: true
+  }
+]
+Favoritos> db.filmes.find({nome: {$eq: "T"}})
+
+Favoritos> db.filmes.find({nome: {$eq: "E"}})
+
+Favoritos> db.filmes.find({categorias: {$in: ["T"]}})
+
+Favoritos> Favoritos> db.filmes.find({nome: {$in: ["E"]}
+... use Favoritos
+Uncaught:
+SyntaxError: Unexpected token, expected "," (2:0)
+
+  1 | Favoritos> db.filmes.find({nome: {$in: ["E"]}
+> 2 | use Favoritos
+    | ^
+  3 |
+
+Favoritos> db.filmes.find(
+...   { titulo: { $regex: /^T/, $options: "i" } }
+... )
+
+Favoritos> db.filmes.find(
+...   { titulo: { $regex: /^T/, $options: "i" } }
+... use Favoritos
+Uncaught:
+SyntaxError: Unexpected token, expected "," (3:0)
+
+  1 | db.filmes.find(
+  2 |   { titulo: { $regex: /^T/, $options: "i" } }
+> 3 | use Favoritos
+    | ^
+  4 |
+
+Favoritos> db.filmes.find(
+...   { titulo: { $regex: /^T/, $options: "i" } }
+... use Favoritos
+Uncaught:
+SyntaxError: Unexpected token, expected "," (3:0)
+
+  1 | db.filmes.find(
+  2 |   { titulo: { $regex: /^T/, $options: "i" } }
+> 3 | use Favoritos
+    | ^
+  4 |
+
+Favoritos> db.filmes.find(
+...   { titulo: { $regex: /^E/, $options: "i" }} )
+[
+  {
+    _id: ObjectId('68b8c321f1aed29b6073518c'),
+    titulo: 'Eu sei o que Vocês Fizeram no Verão Passado',
+    ano: 2025,
+    genero: [ 'Terror Slasher', 'Horror' ],
+    atores: [
+      { nome: 'Madelyn Cline', personagem: 'Danica Richards' },
+      { nome: 'Chase Sui Wonders', personagem: 'Ava Brucks' }
+    ],
+    'avaliação': 7.8
+  }
+]
+Favoritos> db.filmes.find({genero: {$in: ["Drama"]}})
+[
+  {
+    _id: ObjectId('68b8c321f1aed29b6073518b'),
+    titulo: 'F1: O Filme',
+    ano: 2025,
+    genero: [ 'Ação', 'Ação de Carro', 'Motorsport', 'Drama' ],
+    atores: [
+      { nome: 'Brad Pitt', personagem: 'Sonny Hayes' },
+      { nome: 'Damson Idris', personagem: 'Joshua Pearce' }
+    ],
+    'avaliação': 7.8
+  }
+]
+Favoritos> db.filmes.find({atores: {$exists: true}})
+[
+  {
+    _id: ObjectId('68b8c321f1aed29b60735189'),
+    titulo: 'Inception',
+    ano: 2010,
+    genero: [ 'Ação', 'Ficção Científica' ],
+    atores: [
+      { nome: 'Leonardo DiCaprio', personagem: 'Cobb' },
+      { nome: 'Joseph Gordon-Levitt', personagem: 'Arthur' }
+    ],
+    avaliacao: 8.8,
+    disponivelStreaming: true
+  },
+  {
+    _id: ObjectId('68b8c321f1aed29b6073518a'),
+    titulo: 'Superman(2025)',
+    ano: 2025,
+    genero: [ 'Ação', 'Aventura', 'Super-Herói' ],
+    atores: [
+      { nome: 'David Corenswet', personagem: 'Superman' },
+      { nome: 'Rachel Brosnahan', personagem: 'Louis Lane' }
+    ],
+    'avaliação': 7.3
+  },
+  {
+    _id: ObjectId('68b8c321f1aed29b6073518b'),
+    titulo: 'F1: O Filme',
+    ano: 2025,
+    genero: [ 'Ação', 'Ação de Carro', 'Motorsport', 'Drama' ],
+    atores: [
+      { nome: 'Brad Pitt', personagem: 'Sonny Hayes' },
+      { nome: 'Damson Idris', personagem: 'Joshua Pearce' }
+    ],
+    'avaliação': 7.8
+  },
+  {
+    _id: ObjectId('68b8c321f1aed29b6073518c'),
+    titulo: 'Eu sei o que Vocês Fizeram no Verão Passado',
+    ano: 2025,
+    genero: [ 'Terror Slasher', 'Horror' ],
+    atores: [
+      { nome: 'Madelyn Cline', personagem: 'Danica Richards' },
+      { nome: 'Chase Sui Wonders', personagem: 'Ava Brucks' }
+    ],
+    'avaliação': 7.8
+  }
+]
+Favoritos> db.filmes.find({$and: [{personagem: {$eq: "Cobb"}}, {avaliacao $gt: 8}]})
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:63)
+
+> 1 | db.filmes.find({$and: [{personagem: {$eq: "Cobb"}}, {avaliacao $gt: 8}]})
+    |                                                                ^
+  2 |
+
+Favoritos> db.filmes.find({$and: [{personagem: {$eq$eq: "Cobb"}}, {avaliação: {$gt: 8}}]})
+
+Favoritos> db.filmes.find({$and: [{personagem: {$eq: "Cobb"}}, {avaliação: {$gt: 8}}]})
+
+Favoritos> db.filmes.find({$and: [{personagem: {$eq: 'Cobb'}}, {avaliação: {$gt: 8}}]})
+
+Favoritos> db.filmes.find({$and: [{atores: $eleMatch{$eq: 'Cobb'}}, {avaliação: {$gt: 8}}]})
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:41)
+
+> 1 | db.filmes.find({$and: [{atores: $eleMatch{$eq: 'Cobb'}}, {avaliação: {$gt: 8}}]})
+    |                                          ^
+  2 |
+
+Favoritos> db.filmes.find({
+...     $and:[
+...             {atores:{$elemMatch:{personagem:"Cobb"}}},
+...             {avaliacao:{$gt:8}}
+...     ]})
+[
+  {
+    _id: ObjectId('68b8c321f1aed29b60735189'),
+    titulo: 'Inception',
+    ano: 2010,
+    genero: [ 'Ação', 'Ficção Científica' ],
+    atores: [
+      { nome: 'Leonardo DiCaprio', personagem: 'Cobb' },
+      { nome: 'Joseph Gordon-Levitt', personagem: 'Arthur' }
+    ],
+    avaliacao: 8.8,
+    disponivelStreaming: true
+  }
+]
+Favoritos> db.filmes.updateOne({titulo: "Inception"},{$inc: {avaliacao: 0.2}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+Favoritos> db.filmes.find()
+[
+  {
+    _id: ObjectId('68b8c321f1aed29b60735189'),
+    titulo: 'Inception',
+    ano: 2010,
+    genero: [ 'Ação', 'Ficção Científica' ],
+    atores: [
+      { nome: 'Leonardo DiCaprio', personagem: 'Cobb' },
+      { nome: 'Joseph Gordon-Levitt', personagem: 'Arthur' }
+    ],
+    avaliacao: 9,
+    disponivelStreaming: true
+  },
+  {
+    _id: ObjectId('68b8c321f1aed29b6073518a'),
+    titulo: 'Superman(2025)',
+    ano: 2025,
+    genero: [ 'Ação', 'Aventura', 'Super-Herói' ],
+    atores: [
+      { nome: 'David Corenswet', personagem: 'Superman' },
+      { nome: 'Rachel Brosnahan', personagem: 'Louis Lane' }
+    ],
+    'avaliação': 7.3
+  },
+  {
+    _id: ObjectId('68b8c321f1aed29b6073518b'),
+    titulo: 'F1: O Filme',
+    ano: 2025,
+    genero: [ 'Ação', 'Ação de Carro', 'Motorsport', 'Drama' ],
+    atores: [
+      { nome: 'Brad Pitt', personagem: 'Sonny Hayes' },
+      { nome: 'Damson Idris', personagem: 'Joshua Pearce' }
+    ],
+    'avaliação': 7.8
+  },
+  {
+    _id: ObjectId('68b8c321f1aed29b6073518c'),
+    titulo: 'Eu sei o que Vocês Fizeram no Verão Passado',
+    ano: 2025,
+    genero: [ 'Terror Slasher', 'Horror' ],
+    atores: [
+      { nome: 'Madelyn Cline', personagem: 'Danica Richards' },
+      { nome: 'Chase Sui Wonders', personagem: 'Ava Brucks' }
+    ],
+    'avaliação': 7.8
+  }
+]
+Favoritos> db.filmes.updateOne({titulo: "Superman"}, {$set: {disponivelStreaming: false}})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+Favoritos> db.filmes.find()
+[
+  {
+    _id: ObjectId('68b8c321f1aed29b60735189'),
+    titulo: 'Inception',
+    ano: 2010,
+    genero: [ 'Ação', 'Ficção Científica' ],
+    atores: [
+      { nome: 'Leonardo DiCaprio', personagem: 'Cobb' },
+      { nome: 'Joseph Gordon-Levitt', personagem: 'Arthur' }
+    ],
+    avaliacao: 9,
+    disponivelStreaming: true
+  },
+  {
+    _id: ObjectId('68b8c321f1aed29b6073518a'),
+    titulo: 'Superman(2025)',
+    ano: 2025,
+    genero: [ 'Ação', 'Aventura', 'Super-Herói' ],
+    atores: [
+      { nome: 'David Corenswet', personagem: 'Superman' },
+      { nome: 'Rachel Brosnahan', personagem: 'Louis Lane' }
+    ],
+    'avaliação': 7.3
+  },
+  {
+    _id: ObjectId('68b8c321f1aed29b6073518b'),
+    titulo: 'F1: O Filme',
+    ano: 2025,
+    genero: [ 'Ação', 'Ação de Carro', 'Motorsport', 'Drama' ],
+    atores: [
+      { nome: 'Brad Pitt', personagem: 'Sonny Hayes' },
+      { nome: 'Damson Idris', personagem: 'Joshua Pearce' }
+    ],
+    'avaliação': 7.8
+  },
+  {
+    _id: ObjectId('68b8c321f1aed29b6073518c'),
+    titulo: 'Eu sei o que Vocês Fizeram no Verão Passado',
+    ano: 2025,
+    genero: [ 'Terror Slasher', 'Horror' ],
+    atores: [
+      { nome: 'Madelyn Cline', personagem: 'Danica Richards' },
+      { nome: 'Chase Sui Wonders', personagem: 'Ava Brucks' }
+    ],
+    'avaliação': 7.8
+  }
+]
+Favoritos> db.filme.updateOne({nome: "F1: O Filme"}, $set {atores: [{nome: "Javier Bardem", personagem: "Ruben Cervantes"}]}})
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:47)
+
+> 1 | db.filme.updateOne({nome: "F1: O Filme"}, $set {atores: [{nome: "Javier Bardem", personagem: "Ruben Cervantes"}]}})
+    |                                                ^
+  2 |
+
+Favoritos> db.filme.updateOne(
+...   { nome: "F1: O Filme" }, { $set:{atores: [{ nom...   { nome: "F1: O Filme" }, { $set:{atores: [{ nome: "Javier Bardem", personagem: "Ruben Cervantes" }] } })
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 0,
+  modifiedCount: 0,
+  upsertedCount: 0
+}
+Favoritos> db.filmes.countDocumets(ano: {$lt: 2000})
+Uncaught:
+SyntaxError: Unexpected token, expected "," (1:27)
+
+> 1 | db.filmes.countDocumets(ano: {$lt: 2000})
+    |                            ^
+  2 |
+
+Favoritos> db.filmes.countDocumets({ano: {$lt: 2000}})
+TypeError: db.filmes.countDocumets is not a function
+Favoritos> db.filmes.countDocuments({ano: {$lt: 2000}})
+0
+Favoritos>
