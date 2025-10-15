@@ -1,4 +1,4 @@
-CREATE DATABASE db_projeto;
+CREATE DATABASE db_projetos;
 
 use db_projetos;
 CREATE TABLE tb_litoral (
